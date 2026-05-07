@@ -1,5 +1,17 @@
 const std = @import("std");
 
+pub fn getModule(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) *std.Build.Module {
+    if (b.modules.contains("raylib-audio-player")) {
+        return b.modules.get("raylib-audio-player").?;
+    }
+
+    return b.addModule("raylib-audio-player", .{
+        .root_source_file = b.path("lib/audio.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+}
+
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
@@ -12,40 +24,16 @@ pub fn build(b: *std.Build) void {
     const raylib_module = raylib_dep.module("raylib");
     const raylib_artifact = raylib_dep.artifact("raylib");
 
-    const flecs_dep = b.dependency("zflecs", .{});
-    const flecs_module = flecs_dep.module("root");
-    const flecs_artifact = flecs_dep.artifact("flecs");
-
-    const root_module = b.createModule(.{
-        .root_source_file = b.path("src/main.zig"),
+    const lib = b.addModule("raylib-zig-audio-player", .{
+        .root_source_file = b.path("src/lib.zig"),
         .target = target,
         .optimize = optimize,
     });
-    root_module.linkLibrary(raylib_artifact);
-    root_module.linkLibrary(flecs_artifact);
-    root_module.addImport("raylib", raylib_module);
-    root_module.addImport("flecs", flecs_module);
-
-    const exe = b.addExecutable(.{
-        .name = "centipede",
-        .root_module = root_module,
-    });
-
-    b.installArtifact(exe);
-
-    const run_step = b.step("run", "Run the app");
-
-    const run_cmd = b.addRunArtifact(exe);
-    run_step.dependOn(&run_cmd.step);
-
-    run_cmd.step.dependOn(b.getInstallStep());
-
-    if (b.args) |args| {
-        run_cmd.addArgs(args);
-    }
+    lib.linkLibrary(raylib_artifact);
+    lib.addImport("raylib", raylib_module);
 
     const exe_tests = b.addTest(.{
-        .root_module = exe.root_module,
+        .root_module = lib,
     });
 
     const run_exe_tests = b.addRunArtifact(exe_tests);
