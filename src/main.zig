@@ -2,7 +2,7 @@ const std = @import("std");
 const raylib = @import("raylib");
 
 pub fn main() void {
-    std.debug.print("Hello World!", .{});
+    std.debug.print("Hello World!\n", .{});
 
     const width = 800;
     const height = 450;
