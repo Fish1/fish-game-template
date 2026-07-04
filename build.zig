@@ -1,17 +1,5 @@
 const std = @import("std");
 
-pub fn getModule(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) *std.Build.Module {
-    if (b.modules.contains("raylib-audio-player")) {
-        return b.modules.get("raylib-audio-player").?;
-    }
-
-    return b.addModule("raylib-audio-player", .{
-        .root_source_file = b.path("lib/audio.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
-}
-
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
@@ -24,20 +12,25 @@ pub fn build(b: *std.Build) void {
     const raylib_module = raylib_dep.module("raylib");
     const raylib_artifact = raylib_dep.artifact("raylib");
 
-    const lib = b.addModule("raylib-zig-audio-player", .{
-        .root_source_file = b.path("src/lib.zig"),
+    const root_module = b.createModule(.{
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });
-    lib.linkLibrary(raylib_artifact);
-    lib.addImport("raylib", raylib_module);
 
-    const exe_tests = b.addTest(.{
-        .root_module = lib,
+    root_module.linkLibrary(raylib_artifact);
+    root_module.addImport("raylib", raylib_module);
+
+    const exe = b.addExecutable(.{
+        .name = "raylib",
+        .root_module = root_module,
     });
 
-    const run_exe_tests = b.addRunArtifact(exe_tests);
-
-    const test_step = b.step("test", "Run tests");
-    test_step.dependOn(&run_exe_tests.step);
+    b.installArtifact(exe);
+    const run_step = b.step("run", "Run the application.");
+    const run_cmd = b.addRunArtifact(exe);
+    run_step.dependOn(&run_cmd.step);
+    if (b.args) |args| {
+        run_cmd.addArgs(args);
+    }
 }
