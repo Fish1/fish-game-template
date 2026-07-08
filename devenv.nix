@@ -1,4 +1,20 @@
-{ pkgs, lib, config, inputs, ... }: {
+{ pkgs, lib, config, inputs, ... }: let
+	base = pkgs.appimageTools.defaultFhsEnvArgs;
+	fhs = pkgs.buildFHSEnv (
+		base
+		// {
+			name = "fhs";
+			targetPkgs = pkgs: (base.targetPkgs pkgs) ++ (with pkgs; [
+				python3
+				libz
+			]);
+			profile = "export FHS=1";
+			runScript = "fish";
+		}
+	);
+in {
+	# cachix.enable = false;
+
 	env = {
 		LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
 			pkgs.alsa-lib
@@ -6,6 +22,7 @@
 	};
 
   packages = [
+		fhs
 		pkgs.git
 		pkgs.libGL
 		pkgs.wayland-scanner
@@ -15,6 +32,9 @@
 
 	languages = {
 		zig = {
+			enable = true;
+		};
+		php = {
 			enable = true;
 		};
 	};
