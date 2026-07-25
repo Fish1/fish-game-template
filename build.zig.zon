@@ -16,6 +16,10 @@
             .url = "git+https://github.com/emscripten-core/emsdk?ref=4.0.9#3bcf1dcd01f040f370e10fe673a092d9ed79ebb5",
             .hash = "N-V-__8AAJl1DwBezhYo_VE6f53mPVm00R-Fk28NPW7P14EQ",
         },
+        .box2d_zig = .{
+            .url = "git+https://github.com/fish1/box2d-zig#c4e399fa936fdc397174554e168042463b485f72",
+            .hash = "box2d_zig-0.0.0-B_mA0owZAAAk2NewcIApGvVNllbk5gYIozBXLvmI6GSs",
+        },
     },
     .paths = .{
         "build.zig",
