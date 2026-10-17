@@ -17,7 +17,7 @@
     }:
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      zig = zigflake.packages.x86_64-linux.zig_0_16_0;
+      zig = zigflake.packages.x86_64-linux.zig_0_17_0;
       zls = zigflake.packages.x86_64-linux.zig_0_16_0.zls;
     in
     {

@@ -2,11 +2,11 @@
     .name = .fishgametemplate,
     .version = "0.0.0",
     .fingerprint = 0x7de625a91da1286e,
-    .minimum_zig_version = "0.16.0",
+    .minimum_zig_version = "0.17.0",
     .dependencies = .{
         .raylib_zig = .{
-            .url = "git+https://github.com/raylib-zig/raylib-zig?ref=devel#8758f4cd3a5ae0df6941c4715257223d34c5ad3e",
-            .hash = "raylib_zig-6.0.0-KE8RECZ8BQDm-txuospkpZHbJ6DNpacUF7D88RWQ_qAe",
+            .url = "git+https://github.com/raylib-zig/raylib-zig?ref=devel#f6de93c03197260df941b36ddf3b8dab12bcd393",
+            .hash = "raylib_zig-6.0.0-KE8REN2mBQC2nQqk9ILHtZgMfQ-3tZpKCvyhmyUPra_3",
         },
         .box2d_zig = .{
             .url = "git+https://github.com/fish1/box2d-zig#c4e399fa936fdc397174554e168042463b485f72",
